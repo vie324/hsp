@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Human Support Platform — Robots for Human Happiness</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Noto+Sans+JP:wght@100;300;400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #08080c;
+  --surface: #0e0e14;
+  --accent: #00e5ff;
+  --accent2: #7c4dff;
+  --accent3: #ff3d71;
+  --text: #e8e8f0;
+  --text-dim: #6a6a80;
+  --text-bright: #ffffff;
+  --grid-color: rgba(0, 229, 255, 0.04);
+  --glow: 0 0 60px rgba(0, 229, 255, 0.15);
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) var(--bg);
+}
+
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  cursor: default;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+
+/* Grid background */
+.grid-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+
+/* Scan line effect */
+.scanline {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+}
+
+/* Floating particles */
+.particles {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 50%;
+  opacity: 0;
+  animation: particleFloat linear infinite;
+}
+
+@keyframes particleFloat {
+  0% { opacity: 0; transform: translateY(100vh) scale(0); }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.6; }
+  100% { opacity: 0; transform: translateY(-10vh) scale(1); }
+}
+
+/* Navigation */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 24px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  backdrop-filter: blur(20px);
+  background: rgba(8, 8, 12, 0.7);
+  border-bottom: 1px solid rgba(0, 229, 255, 0.08);
+  transition: all 0.4s;
+}
+
+.logo {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: 18px;
+  letter-spacing: 4px;
+  color: var(--accent);
+  text-transform: uppercase;
+  position: relative;
+}
+
+.logo::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+}
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.3s;
+  position: relative;
+}
+
+.nav-links a:hover {
+  color: var(--accent);
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width 0.3s;
+}
+
+.nav-links a:hover::after { width: 100%; }
+
+/* Section base */
+section {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 48px;
+}
+
+.section-inner {
+  max-width: 1200px;
+  width: 100%;
+}
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-glow {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 229, 255, 0.08) 0%, transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: pulseGlow 6s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+  50% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+}
+
+.hero-ring {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border: 1px solid rgba(0, 229, 255, 0.1);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: ringRotate 30s linear infinite;
+}
+
+.hero-ring:nth-child(2) {
+  width: 650px;
+  height: 650px;
+  animation-duration: 45s;
+  animation-direction: reverse;
+  border-color: rgba(124, 77, 255, 0.06);
+}
+
+.hero-ring:nth-child(3) {
+  width: 800px;
+  height: 800px;
+  animation-duration: 60s;
+  border-color: rgba(0, 229, 255, 0.04);
+}
+
+@keyframes ringRotate {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.hero-ring::before {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 20px var(--accent);
+}
+
+.hero-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 40px;
+  opacity: 0;
+  animation: fadeUp 1s 0.5s forwards;
+  position: relative;
+  z-index: 3;
+}
+
+.hero-label::before, .hero-label::after {
+  content: '//';
+  margin: 0 12px;
+  opacity: 0.4;
+}
+
+.hero h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: clamp(36px, 6vw, 80px);
+  line-height: 1.15;
+  letter-spacing: -1px;
+  color: var(--text-bright);
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fadeUp 1s 0.8s forwards;
+  position: relative;
+  z-index: 3;
+}
+
+.hero h1 .gradient-text {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 50%, var(--accent3) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--text-dim);
+  line-height: 1.8;
+  max-width: 500px;
+  margin: 0 auto 20px;
+  opacity: 0;
+  animation: fadeUp 1s 1.1s forwards;
+  position: relative;
+  z-index: 3;
+}
+
+.hero-tagline {
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: var(--text-dim);
+  margin-bottom: 56px;
+  opacity: 0;
+  animation: fadeUp 1s 1.3s forwards;
+  position: relative;
+  z-index: 3;
+}
+
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--bg);
+  background: var(--accent);
+  padding: 18px 48px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  position: relative;
+  z-index: 3;
+  opacity: 0;
+  animation: fadeUp 1s 1.5s forwards;
+  transition: all 0.4s;
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+}
+
+.cta-btn:hover {
+  background: var(--text-bright);
+  box-shadow: 0 0 40px rgba(0, 229, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.cta-btn .arrow {
+  transition: transform 0.3s;
+}
+
+.cta-btn:hover .arrow {
+  transform: translateX(4px);
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  animation: fadeUp 1s 2s forwards;
+  z-index: 3;
+}
+
+.scroll-line {
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.3; transform: scaleY(0.6); }
+  50% { opacity: 1; transform: scaleY(1); }
+}
+
+.scroll-text {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* Section label */
+.section-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 48px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.section-label::before {
+  content: '';
+  width: 40px;
+  height: 1px;
+  background: var(--accent);
+}
+
+.section-label .num {
+  color: var(--text-dim);
+  opacity: 0.4;
+}
+
+/* Large text style */
+.big-text {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 900;
+  font-size: clamp(28px, 4vw, 52px);
+  line-height: 1.6;
+  color: var(--text-bright);
+  letter-spacing: 2px;
+}
+
+.big-text .dim {
+  color: var(--text-dim);
+  font-weight: 300;
+}
+
+.big-text .accent {
+  color: var(--accent);
+}
+
+.big-text .accent2 {
+  color: var(--accent2);
+}
+
+.big-text .accent3 {
+  color: var(--accent3);
+}
+
+/* Divider */
+.section-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 229, 255, 0.15), transparent);
+  position: relative;
+  z-index: 2;
+}
+
+/* VISION Section */
+.vision-section {
+  background: linear-gradient(180deg, var(--bg) 0%, rgba(0, 229, 255, 0.02) 50%, var(--bg) 100%);
+}
+
+/* DECLARATION */
+.declaration-section {
+  position: relative;
+}
+
+.declaration-section .big-statement {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 900;
+  font-size: clamp(24px, 3.5vw, 44px);
+  line-height: 1.8;
+  color: var(--text-bright);
+}
+
+.declaration-section .highlight-line {
+  display: block;
+  margin-top: 24px;
+  padding: 16px 0;
+  border-left: 3px solid var(--accent);
+  padding-left: 24px;
+  color: var(--accent);
+  font-weight: 900;
+}
+
+/* REALITY */
+.reality-section {
+  background: linear-gradient(180deg, var(--bg) 0%, rgba(255, 61, 113, 0.02) 50%, var(--bg) 100%);
+}
+
+.reality-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.reality-left .problem {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 900;
+  font-size: clamp(32px, 4vw, 56px);
+  color: var(--accent3);
+  margin-bottom: 32px;
+}
+
+.reality-right {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.reality-item {
+  padding: 24px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.3s;
+}
+
+.reality-item:hover {
+  color: var(--text);
+  padding-left: 8px;
+}
+
+.reality-item .dot {
+  width: 6px;
+  height: 6px;
+  background: var(--accent3);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.reality-bottom {
+  margin-top: 64px;
+  text-align: center;
+}
+
+.reality-bottom .quote {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 700;
+  font-size: clamp(20px, 2.5vw, 32px);
+  color: var(--text-bright);
+  position: relative;
+  display: inline-block;
+}
+
+.reality-bottom .quote::before {
+  content: '"';
+  position: absolute;
+  left: -32px;
+  top: -8px;
+  font-size: 48px;
+  color: var(--accent);
+  opacity: 0.3;
+  font-family: 'Space Mono', monospace;
+}
+
+/* ANSWER */
+.answer-section {
+  background: linear-gradient(180deg, var(--bg) 0%, rgba(124, 77, 255, 0.03) 50%, var(--bg) 100%);
+}
+
+.answer-intro {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 900;
+  font-size: clamp(28px, 3.5vw, 48px);
+  color: var(--accent);
+  margin-bottom: 64px;
+}
+
+.tech-stack {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 64px;
+  flex-wrap: wrap;
+}
+
+.tech-card {
+  flex: 1;
+  min-width: 200px;
+  padding: 40px 32px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  position: relative;
+  transition: all 0.4s;
+  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+}
+
+.tech-card:hover {
+  border-color: var(--accent);
+  background: rgba(0, 229, 255, 0.03);
+  transform: translateY(-4px);
+  box-shadow: var(--glow);
+}
+
+.tech-card .tech-num {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 3px;
+  margin-bottom: 24px;
+}
+
+.tech-card h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--text-bright);
+  letter-spacing: 1px;
+}
+
+.platform-name {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: clamp(24px, 3.5vw, 42px);
+  letter-spacing: 2px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+}
+
+.arrow-connector {
+  font-family: 'Space Mono', monospace;
+  font-size: 24px;
+  color: var(--accent);
+  text-align: center;
+  margin-bottom: 24px;
+  animation: arrowPulse 2s ease-in-out infinite;
+}
+
+@keyframes arrowPulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+/* FIRST DEPLOYMENT */
+.deployment-section {
+  position: relative;
+}
+
+.deployment-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.deployment-left h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: clamp(20px, 2.5vw, 32px);
+  color: var(--accent);
+  margin-bottom: 16px;
+  letter-spacing: 1px;
+}
+
+.deployment-left .subtitle {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 900;
+  font-size: clamp(18px, 2vw, 26px);
+  color: var(--text-bright);
+  margin-bottom: 40px;
+  line-height: 1.6;
+}
+
+.deployment-right {
+  position: relative;
+}
+
+.deploy-visual {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 1px solid rgba(0, 229, 255, 0.1);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center, rgba(0, 229, 255, 0.03), transparent 70%);
+}
+
+.deploy-visual .hex {
+  width: 200px;
+  height: 200px;
+  position: relative;
+}
+
+.deploy-visual .hex-ring {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(0, 229, 255, 0.2);
+  border-radius: 50%;
+  animation: hexSpin 20s linear infinite;
+}
+
+.deploy-visual .hex-ring:nth-child(2) {
+  inset: -30px;
+  animation-direction: reverse;
+  animation-duration: 30s;
+  border-color: rgba(124, 77, 255, 0.1);
+}
+
+.deploy-visual .hex-ring:nth-child(3) {
+  inset: -60px;
+  animation-duration: 40s;
+  border-color: rgba(0, 229, 255, 0.05);
+}
+
+@keyframes hexSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.deploy-visual .center-text {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: var(--accent);
+  text-align: center;
+  line-height: 2;
+}
+
+.deploy-detail {
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--text-dim);
+  line-height: 2;
+}
+
+.deploy-detail strong {
+  color: var(--text);
+  font-weight: 700;
+}
+
+/* WHY WE WIN */
+.win-section {
+  text-align: center;
+}
+
+.win-words {
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+  margin-bottom: 64px;
+  flex-wrap: wrap;
+}
+
+.win-word {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: clamp(36px, 5vw, 64px);
+  color: var(--text-bright);
+  position: relative;
+  opacity: 0.15;
+  transition: all 0.5s;
+}
+
+.win-word:hover {
+  opacity: 1;
+  color: var(--accent);
+  text-shadow: 0 0 40px rgba(0, 229, 255, 0.4);
+}
+
+.win-word .period {
+  color: var(--accent);
+  opacity: 1;
+}
+
+.win-statement {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 300;
+  font-size: clamp(16px, 2vw, 22px);
+  color: var(--text-dim);
+  line-height: 2;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.win-statement strong {
+  color: var(--accent);
+  font-weight: 900;
+}
+
+/* LEADERSHIP */
+.leadership-section {
+  background: linear-gradient(180deg, var(--bg) 0%, rgba(0, 229, 255, 0.02) 50%, var(--bg) 100%);
+}
+
+.leaders {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+}
+
+.leader-card {
+  padding: 48px;
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  position: relative;
+  transition: all 0.4s;
+}
+
+.leader-card:hover {
+  border-color: rgba(0, 229, 255, 0.15);
+  background: rgba(0, 229, 255, 0.02);
+}
+
+.leader-card .role {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+.leader-card h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: clamp(18px, 2vw, 24px);
+  color: var(--text-bright);
+  margin-bottom: 24px;
+  letter-spacing: 1px;
+}
+
+.leader-card p {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--text-dim);
+  line-height: 2;
+}
+
+.leader-card .initial {
+  position: absolute;
+  top: 24px;
+  right: 32px;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: 80px;
+  color: rgba(0, 229, 255, 0.03);
+  line-height: 1;
+}
+
+/* COMMITMENT */
+.commitment-section {
+  text-align: center;
+  min-height: 60vh;
+}
+
+.commitment-text {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 900;
+  font-size: clamp(24px, 3.5vw, 48px);
+  color: var(--text-bright);
+  line-height: 1.6;
+  letter-spacing: 2px;
+}
+
+.commitment-text .underline {
+  position: relative;
+  display: inline;
+}
+
+.commitment-text .underline::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
+}
+
+/* FINAL CTA */
+.final-section {
+  min-height: 100vh;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.final-section .mega-text {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: clamp(32px, 5vw, 72px);
+  line-height: 1.4;
+  color: var(--text-bright);
+  margin-bottom: 16px;
+}
+
+.final-section .mega-sub {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 900;
+  font-size: clamp(24px, 3.5vw, 52px);
+  color: var(--accent);
+  margin-bottom: 64px;
+  letter-spacing: 4px;
+}
+
+.final-glow {
+  position: absolute;
+  width: 800px;
+  height: 800px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(0, 229, 255, 0.06) 0%,
+    rgba(124, 77, 255, 0.03) 40%,
+    transparent 70%
+  );
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: pulseGlow 8s ease-in-out infinite;
+}
+
+/* Fade-in animation */
+.fade-in {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-in-delay-1 { transition-delay: 0.15s; }
+.fade-in-delay-2 { transition-delay: 0.3s; }
+.fade-in-delay-3 { transition-delay: 0.45s; }
+.fade-in-delay-4 { transition-delay: 0.6s; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Glitch effect for hover */
+.glitch-hover:hover {
+  animation: glitch 0.3s ease;
+}
+
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(2px, -2px); }
+  60% { transform: translate(-1px, -1px); }
+  80% { transform: translate(1px, 1px); }
+  100% { transform: translate(0); }
+}
+
+/* Footer */
+footer {
+  position: relative;
+  z-index: 2;
+  padding: 48px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+footer .copy {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+}
+
+footer .footer-links {
+  display: flex;
+  gap: 24px;
+}
+
+footer .footer-links a {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+footer .footer-links a:hover { color: var(--accent); }
+
+/* Status bar decoration */
+.status-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 99;
+  padding: 8px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(8, 8, 12, 0.9);
+  border-top: 1px solid rgba(0, 229, 255, 0.06);
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+}
+
+.status-bar .status-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  margin-right: 8px;
+  animation: statusBlink 3s ease-in-out infinite;
+}
+
+@keyframes statusBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  section { padding: 80px 24px; }
+  .reality-grid { grid-template-columns: 1fr; gap: 40px; }
+  .deployment-grid { grid-template-columns: 1fr; gap: 40px; }
+  .leaders { grid-template-columns: 1fr; }
+  .tech-stack { flex-direction: column; }
+  .win-words { gap: 24px; }
+  .status-bar { display: none; }
+  footer { flex-direction: column; gap: 16px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- Background Effects -->
+<div class="grid-bg"></div>
+<div class="scanline"></div>
+<div class="particles" id="particles"></div>
+
+<!-- Navigation -->
+<nav>
+  <div class="logo">HSP</div>
+  <ul class="nav-links">
+    <li><a href="#vision">Vision</a></li>
+    <li><a href="#answer">Platform</a></li>
+    <li><a href="#deployment">Deployment</a></li>
+    <li><a href="#leadership">Leadership</a></li>
+    <li><a href="#final">Join</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-ring"></div>
+  <div class="hero-ring"></div>
+  <div class="hero-ring"></div>
+
+  <div class="hero-label">Human Support Platform</div>
+  <h1>
+    Robots for<br>
+    <span class="gradient-text">Human Happiness.</span>
+  </h1>
+  <p class="hero-sub">人を幸せにするロボットを。</p>
+  <p class="hero-tagline">From Japan to the World. From Earth to Space.</p>
+  <a href="#final" class="cta-btn">
+    Join the Revolution <span class="arrow">→</span>
+  </a>
+
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    <span class="scroll-text">Scroll</span>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- VISION -->
+<section class="vision-section" id="vision">
+  <div class="section-inner">
+    <div class="section-label fade-in"><span class="num">01</span> Vision</div>
+    <div class="big-text fade-in fade-in-delay-1">
+      人は、人を支えてきた。<br>
+      <span class="dim">それが、</span><span class="accent">文明</span><span class="dim">だ。</span>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- DECLARATION -->
+<section class="declaration-section" id="declaration">
+  <div class="section-inner">
+    <div class="section-label fade-in"><span class="num">02</span> Declaration</div>
+    <div class="declaration-section">
+      <div class="big-statement fade-in fade-in-delay-1">
+        私たちは、ロボットを<span style="color:var(--accent3)">売らない</span>。<br>
+        <span style="color:var(--text-dim); font-weight:300;">人類の</span>"身体支援"<span style="color:var(--text-dim); font-weight:300;">を、</span><span style="color:var(--accent)">インフラにする。</span>
+      </div>
+      <div class="big-statement fade-in fade-in-delay-2" style="margin-top: 48px;">
+        <span style="color:var(--text-dim); font-weight:300; font-size: 0.8em;">情報革命が"知"を解放した。</span>
+        <span class="highlight-line">次は、"身体革命"だ。</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- REALITY -->
+<section class="reality-section" id="reality">
+  <div class="section-inner">
+    <div class="section-label fade-in"><span class="num">03</span> Reality</div>
+    <div class="reality-grid">
+      <div class="reality-left fade-in fade-in-delay-1">
+        <div class="problem">人が足りない。</div>
+        <p style="font-size: 16px; color: var(--text-dim); font-weight: 300; line-height: 2;">それでも——</p>
+      </div>
+      <div class="reality-right">
+        <div class="reality-item fade-in fade-in-delay-1">
+          <span class="dot"></span>
+          医療は<strong style="color:var(--text-bright)">止まらない</strong>。
+        </div>
+        <div class="reality-item fade-in fade-in-delay-2">
+          <span class="dot"></span>
+          介護も<strong style="color:var(--text-bright)">止まらない</strong>。
+        </div>
+        <div class="reality-item fade-in fade-in-delay-3">
+          <span class="dot"></span>
+          ケアも<strong style="color:var(--text-bright)">止まらない</strong>。
+        </div>
+      </div>
+    </div>
+    <div class="reality-bottom fade-in fade-in-delay-4">
+      <p class="quote">"寄り添う仕事"は、消えない。</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ANSWER -->
+<section class="answer-section" id="answer">
+  <div class="section-inner">
+    <div class="section-label fade-in"><span class="num">04</span> Answer</div>
+    <div class="answer-intro fade-in fade-in-delay-1">ならば、進化させる。</div>
+
+    <div class="tech-stack">
+      <div class="tech-card fade-in fade-in-delay-1">
+        <div class="tech-num">001</div>
+        <h3>Physical AI</h3>
+      </div>
+      <div class="tech-card fade-in fade-in-delay-2">
+        <div class="tech-num">002</div>
+        <h3>Robotics</h3>
+      </div>
+      <div class="tech-card fade-in fade-in-delay-3">
+        <div class="tech-num">003</div>
+        <h3>Robotic VR</h3>
+      </div>
+    </div>
+
+    <div class="arrow-connector fade-in">↓ 統合する ↓</div>
+    <div class="platform-name fade-in fade-in-delay-1">Human Support Platform.</div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- FIRST DEPLOYMENT -->
+<section class="deployment-section" id="deployment">
+  <div class="section-inner">
+    <div class="section-label fade-in"><span class="num">05</span> First Deployment</div>
+    <div class="deployment-grid">
+      <div class="deployment-left">
+        <h3 class="fade-in">AI MASSAGE × ROBOTIC VR</h3>
+        <p class="subtitle fade-in fade-in-delay-1">AIマッサージ ×<br>ロボティックVR。</p>
+        <div class="deploy-detail fade-in fade-in-delay-2">
+          人の<strong>手技</strong>と<strong>知能</strong>を、<br>
+          Physical AIで再構築する。<br><br>
+          人とロボットが<strong>共存</strong>する、<br>
+          次世代ケアモデル。
+        </div>
+      </div>
+      <div class="deployment-right fade-in fade-in-delay-3">
+        <div class="deploy-visual">
+          <div class="hex">
+            <div class="hex-ring"></div>
+            <div class="hex-ring"></div>
+            <div class="hex-ring"></div>
+          </div>
+          <div class="center-text">
+            PHYSICAL<br>AI<br>×<br>CARE
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- WHY WE WIN -->
+<section class="win-section" id="win">
+  <div class="section-inner">
+    <div class="section-label fade-in" style="justify-content: center;"><span class="num">06</span> Why We Win</div>
+    <div class="win-words">
+      <span class="win-word glitch-hover fade-in">Built<span class="period">.</span></span>
+      <span class="win-word glitch-hover fade-in fade-in-delay-1">Learned<span class="period">.</span></span>
+      <span class="win-word glitch-hover fade-in fade-in-delay-2">Evolved<span class="period">.</span></span>
+    </div>
+    <div class="win-statement fade-in fade-in-delay-3">
+      製品はつくらない。<br>
+      <strong>「!」が生まれ続ける基盤</strong>をつくる。
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- LEADERSHIP -->
+<section class="leadership-section" id="leadership">
+  <div class="section-inner">
+    <div class="section-label fade-in"><span class="num">07</span> Leadership</div>
+    <div class="leaders">
+      <div class="leader-card fade-in fade-in-delay-1">
+        <div class="initial">K</div>
+        <div class="role">Founder / CEO</div>
+        <h3>Kenji Ito</h3>
+        <p>
+          事業の創出から、再構築まで。<br>
+          すべてを現場で経験。<br>
+          理論ではなく、実務から生まれた構想。
+        </p>
+      </div>
+      <div class="leader-card fade-in fade-in-delay-2">
+        <div class="initial">R</div>
+        <div class="role">Co-Founder / CTO</div>
+        <h3>Ryosuke Tasaki, Ph.D.</h3>
+        <p>
+          青山学院大学 理工学部 准教授。<br>
+          ロボティクス研究者。<br>
+          Physical AI・安全設計・制御を統括。<br>
+          人の知能と技能を、ロボットへ。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- COMMITMENT -->
+<section class="commitment-section" id="commitment">
+  <div class="section-inner" style="text-align: center;">
+    <div class="section-label fade-in" style="justify-content: center;"><span class="num">08</span> Commitment</div>
+    <p class="commitment-text fade-in fade-in-delay-1">
+      私たちは、この挑戦に<br>
+      <span class="underline">人生を賭けている。</span>
+    </p>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- FINAL -->
+<section class="final-section" id="final">
+  <div class="final-glow"></div>
+  <div class="section-inner" style="text-align: center; position: relative; z-index: 3;">
+    <div class="mega-text fade-in">
+      地球から宇宙まで。
+    </div>
+    <div class="mega-sub fade-in fade-in-delay-1">
+      身体を、解放する。
+    </div>
+    <a href="#" class="cta-btn fade-in fade-in-delay-2" style="opacity: 0;">
+      Join the Revolution <span class="arrow">→</span>
+    </a>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <span class="copy">© 2025 HUMAN SUPPORT PLATFORM — ALL RIGHTS RESERVED</span>
+  <div class="footer-links">
+    <a href="#">Contact</a>
+    <a href="#">Careers</a>
+    <a href="#">Press</a>
+  </div>
+</footer>
+
+<!-- Status Bar -->
+<div class="status-bar">
+  <span><span class="status-dot"></span>SYSTEM ACTIVE</span>
+  <span>TOKYO, JAPAN — 35.6762°N, 139.6503°E</span>
+  <span id="status-time"></span>
+</div>
+
+<script>
+// Particles
+const particlesEl = document.getElementById('particles');
+for (let i = 0; i < 30; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  p.style.left = Math.random() * 100 + '%';
+  p.style.animationDuration = (8 + Math.random() * 12) + 's';
+  p.style.animationDelay = Math.random() * 10 + 's';
+  p.style.width = p.style.height = (1 + Math.random() * 2) + 'px';
+  particlesEl.appendChild(p);
+}
+
+// Intersection Observer for fade-in
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// Status bar time
+function updateTime() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2, '0');
+  const m = String(now.getMinutes()).padStart(2, '0');
+  const s = String(now.getSeconds()).padStart(2, '0');
+  document.getElementById('status-time').textContent = `${h}:${m}:${s} JST`;
+}
+updateTime();
+setInterval(updateTime, 1000);
+
+// Smooth reveal for CTA buttons in final section
+document.querySelectorAll('.final-section .cta-btn').forEach(btn => {
+  observer.observe(btn);
+});
+</script>
+</body>
+</html>
