@@ -1020,6 +1020,308 @@ footer .footer-links a:hover { color: var(--accent); }
   50% { opacity: 0.3; }
 }
 
+/* IMAGE PLACEHOLDER */
+.image-placeholder {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: rgba(0, 229, 255, 0.03);
+  border: 1px dashed rgba(0, 229, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.image-placeholder::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(45deg, transparent 48%, rgba(0, 229, 255, 0.04) 49%, rgba(0, 229, 255, 0.04) 51%, transparent 52%),
+    linear-gradient(-45deg, transparent 48%, rgba(0, 229, 255, 0.04) 49%, rgba(0, 229, 255, 0.04) 51%, transparent 52%);
+  background-size: 30px 30px;
+}
+
+.image-placeholder .ph-icon {
+  width: 48px;
+  height: 48px;
+  border: 2px solid rgba(0, 229, 255, 0.2);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.image-placeholder .ph-icon::before {
+  content: '▲';
+  color: rgba(0, 229, 255, 0.3);
+  font-size: 18px;
+}
+
+.image-placeholder .ph-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  opacity: 0.5;
+  position: relative;
+  z-index: 1;
+}
+
+.image-placeholder.square { aspect-ratio: 1; }
+.image-placeholder.wide { aspect-ratio: 21 / 9; }
+.image-placeholder.portrait { aspect-ratio: 3 / 4; }
+
+/* CONTACT SECTION */
+.contact-section {
+  background: linear-gradient(180deg, var(--bg) 0%, rgba(0, 229, 255, 0.02) 50%, var(--bg) 100%);
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.contact-left h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: clamp(24px, 3vw, 40px);
+  color: var(--text-bright);
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+}
+
+.contact-left .contact-sub {
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--text-dim);
+  line-height: 2;
+  margin-bottom: 40px;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 40px;
+}
+
+.contact-info-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+}
+
+.contact-info-item .info-icon {
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(0, 229, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+/* Form */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.form-group label .label-jp {
+  color: var(--text-dim);
+  margin-left: 8px;
+  letter-spacing: 1px;
+}
+
+.form-group label .optional {
+  color: var(--text-dim);
+  opacity: 0.5;
+  font-size: 9px;
+  margin-left: 8px;
+}
+
+.form-group input,
+.form-group textarea {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 14px 16px;
+  outline: none;
+  transition: all 0.3s;
+  width: 100%;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--accent);
+  background: rgba(0, 229, 255, 0.03);
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.05);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: var(--text-dim);
+  opacity: 0.4;
+}
+
+.form-group textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Interest checkboxes */
+.form-interest-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.form-interest-label .label-jp {
+  color: var(--text-dim);
+  margin-left: 8px;
+  letter-spacing: 1px;
+}
+
+.interest-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.interest-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  transition: all 0.3s;
+  position: relative;
+}
+
+.interest-item:hover {
+  border-color: rgba(0, 229, 255, 0.15);
+  background: rgba(0, 229, 255, 0.02);
+}
+
+.interest-item input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+  transition: all 0.3s;
+}
+
+.interest-item input[type="checkbox"]:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.3);
+}
+
+.interest-item input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--bg);
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.interest-item .interest-text {
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.4;
+  transition: color 0.3s;
+}
+
+.interest-item .interest-text .en {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--text);
+  display: block;
+}
+
+.interest-item:hover .interest-text {
+  color: var(--text);
+}
+
+.form-submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--bg);
+  background: var(--accent);
+  padding: 18px 48px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.4s;
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+  margin-top: 8px;
+  align-self: flex-start;
+}
+
+.form-submit:hover {
+  background: var(--text-bright);
+  box-shadow: 0 0 40px rgba(0, 229, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.form-submit .arrow {
+  transition: transform 0.3s;
+}
+
+.form-submit:hover .arrow {
+  transform: translateX(4px);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   nav { padding: 16px 24px; }
@@ -1027,6 +1329,8 @@ footer .footer-links a:hover { color: var(--accent); }
   section { padding: 80px 24px; }
   .reality-grid { grid-template-columns: 1fr; gap: 40px; }
   .deployment-grid { grid-template-columns: 1fr; gap: 40px; }
+  .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+  .interest-grid { grid-template-columns: 1fr; }
   .leaders { grid-template-columns: 1fr; }
   .tech-stack { flex-direction: column; }
   .win-words { gap: 24px; }
@@ -1050,7 +1354,7 @@ footer .footer-links a:hover { color: var(--accent); }
     <li><a href="#answer">Platform</a></li>
     <li><a href="#deployment">Deployment</a></li>
     <li><a href="#leadership">Leadership</a></li>
-    <li><a href="#final">Join</a></li>
+    <li><a href="#contact">Contact</a></li>
   </ul>
 </nav>
 
@@ -1068,9 +1372,15 @@ footer .footer-links a:hover { color: var(--accent); }
   </h1>
   <p class="hero-sub">人を幸せにするロボットを。</p>
   <p class="hero-tagline">From Japan to the World. From Earth to Space.</p>
-  <a href="#final" class="cta-btn">
+  <a href="#contact" class="cta-btn">
     Join the Revolution <span class="arrow">→</span>
   </a>
+
+  <!-- Image Placeholder: Hero background / key visual -->
+  <div class="image-placeholder wide" style="position:absolute; bottom:0; left:0; right:0; z-index:1; opacity:0.3; border:none;">
+    <div class="ph-icon"></div>
+    <span class="ph-label">Image — Hero Key Visual</span>
+  </div>
 
   <div class="scroll-indicator">
     <div class="scroll-line"></div>
@@ -1139,6 +1449,11 @@ footer .footer-links a:hover { color: var(--accent); }
     <div class="reality-bottom fade-in fade-in-delay-4">
       <p class="quote">"寄り添う仕事"は、消えない。</p>
     </div>
+    <!-- Image Placeholder: Reality / care scene -->
+    <div class="image-placeholder fade-in" style="margin-top: 64px;">
+      <div class="ph-icon"></div>
+      <span class="ph-label">Image — Care / Reality Scene</span>
+    </div>
   </div>
 </section>
 
@@ -1188,15 +1503,10 @@ footer .footer-links a:hover { color: var(--accent); }
         </div>
       </div>
       <div class="deployment-right fade-in fade-in-delay-3">
-        <div class="deploy-visual">
-          <div class="hex">
-            <div class="hex-ring"></div>
-            <div class="hex-ring"></div>
-            <div class="hex-ring"></div>
-          </div>
-          <div class="center-text">
-            PHYSICAL<br>AI<br>×<br>CARE
-          </div>
+        <!-- Image Placeholder: Deployment product photo -->
+        <div class="image-placeholder square">
+          <div class="ph-icon"></div>
+          <span class="ph-label">Image — AI Massage × Robotic VR Product</span>
         </div>
       </div>
     </div>
@@ -1229,6 +1539,11 @@ footer .footer-links a:hover { color: var(--accent); }
     <div class="section-label fade-in"><span class="num">07</span> Leadership</div>
     <div class="leaders">
       <div class="leader-card fade-in fade-in-delay-1">
+        <!-- Image Placeholder: CEO photo -->
+        <div class="image-placeholder portrait" style="margin-bottom: 24px; max-width: 200px;">
+          <div class="ph-icon"></div>
+          <span class="ph-label">Photo — CEO</span>
+        </div>
         <div class="initial">K</div>
         <div class="role">Founder / CEO</div>
         <h3>Kenji Ito</h3>
@@ -1239,6 +1554,11 @@ footer .footer-links a:hover { color: var(--accent); }
         </p>
       </div>
       <div class="leader-card fade-in fade-in-delay-2">
+        <!-- Image Placeholder: CTO photo -->
+        <div class="image-placeholder portrait" style="margin-bottom: 24px; max-width: 200px;">
+          <div class="ph-icon"></div>
+          <span class="ph-label">Photo — CTO</span>
+        </div>
         <div class="initial">R</div>
         <div class="role">Co-Founder / CTO</div>
         <h3>Ryosuke Tasaki, Ph.D.</h3>
@@ -1268,6 +1588,111 @@ footer .footer-links a:hover { color: var(--accent); }
 
 <div class="section-divider"></div>
 
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="section-inner">
+    <div class="section-label fade-in"><span class="num">09</span> Contact</div>
+    <div class="contact-grid">
+
+      <!-- Left: Info + Image placeholder -->
+      <div class="contact-left">
+        <h3 class="fade-in">Get in Touch</h3>
+        <p class="contact-sub fade-in fade-in-delay-1">
+          共に、身体革命を起こしませんか。<br>
+          事業提携・投資・採用など、<br>
+          あらゆるお問い合わせをお待ちしています。
+        </p>
+
+        <!-- Image Placeholder: Contact visual -->
+        <div class="image-placeholder fade-in fade-in-delay-2">
+          <div class="ph-icon"></div>
+          <span class="ph-label">Image — Contact Visual</span>
+        </div>
+
+        <div class="contact-info fade-in fade-in-delay-3">
+          <div class="contact-info-item">
+            <div class="info-icon">✉</div>
+            <span>info@hsp-robotics.com</span>
+          </div>
+          <div class="contact-info-item">
+            <div class="info-icon">◎</div>
+            <span>Tokyo, Japan</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Form -->
+      <div class="contact-right">
+        <form class="contact-form fade-in fade-in-delay-1" onsubmit="return false;">
+
+          <div class="form-group">
+            <label>Name <span class="label-jp">お名前</span></label>
+            <input type="text" placeholder="Your full name">
+          </div>
+
+          <div class="form-group">
+            <label>Organization <span class="label-jp">所属</span></label>
+            <input type="text" placeholder="Company / University / Organization">
+          </div>
+
+          <div class="form-group">
+            <label>Email <span class="label-jp">メールアドレス</span></label>
+            <input type="email" placeholder="you@example.com">
+          </div>
+
+          <div class="form-group">
+            <label>Phone <span class="label-jp">電話番号</span> <span class="optional">(Optional)</span></label>
+            <input type="tel" placeholder="+81-XX-XXXX-XXXX">
+          </div>
+
+          <div class="form-group">
+            <label class="form-interest-label">I am interested in <span class="label-jp">ご関心のある内容</span></label>
+            <div class="interest-grid">
+              <label class="interest-item">
+                <input type="checkbox" name="interest" value="partnership">
+                <span class="interest-text"><span class="en">Partnership</span>事業提携</span>
+              </label>
+              <label class="interest-item">
+                <input type="checkbox" name="interest" value="investment">
+                <span class="interest-text"><span class="en">Investment</span>投資</span>
+              </label>
+              <label class="interest-item">
+                <input type="checkbox" name="interest" value="deployment">
+                <span class="interest-text"><span class="en">Deployment</span>導入・実装</span>
+              </label>
+              <label class="interest-item">
+                <input type="checkbox" name="interest" value="research">
+                <span class="interest-text"><span class="en">Research</span>研究連携</span>
+              </label>
+              <label class="interest-item">
+                <input type="checkbox" name="interest" value="press">
+                <span class="interest-text"><span class="en">Press</span>取材</span>
+              </label>
+              <label class="interest-item">
+                <input type="checkbox" name="interest" value="careers">
+                <span class="interest-text"><span class="en">Joining the team</span>採用</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Message <span class="label-jp">メッセージ</span></label>
+            <textarea placeholder="Tell us about your vision..."></textarea>
+          </div>
+
+          <button type="submit" class="form-submit">
+            Send Message <span class="arrow">→</span>
+          </button>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
 <!-- FINAL -->
 <section class="final-section" id="final">
   <div class="final-glow"></div>
@@ -1278,7 +1703,7 @@ footer .footer-links a:hover { color: var(--accent); }
     <div class="mega-sub fade-in fade-in-delay-1">
       身体を、解放する。
     </div>
-    <a href="#" class="cta-btn fade-in fade-in-delay-2" style="opacity: 0;">
+    <a href="#contact" class="cta-btn fade-in fade-in-delay-2" style="opacity: 0;">
       Join the Revolution <span class="arrow">→</span>
     </a>
   </div>
@@ -1288,9 +1713,9 @@ footer .footer-links a:hover { color: var(--accent); }
 <footer>
   <span class="copy">© 2025 HUMAN SUPPORT PLATFORM — ALL RIGHTS RESERVED</span>
   <div class="footer-links">
-    <a href="#">Contact</a>
-    <a href="#">Careers</a>
-    <a href="#">Press</a>
+    <a href="#contact">Contact</a>
+    <a href="#contact">Careers</a>
+    <a href="#contact">Press</a>
   </div>
 </footer>
 
